@@ -1,0 +1,40 @@
+#!/bin/sh -eu
+#
+# Dump SQL database, merge overlapping visits and produce
+# JSON. Terveisiä Turkuun tutuille.
+
+db="$(readlink -f "${1:-`dirname "$0"`/../db/db.sqlite}")"
+
+tmpdir="`mktemp -d`"
+cd "$tmpdir"
+
+sqlite3 "$db" -csv "select distinct u.id as id,u.nick as nick from public_visit p join user u using (id) order by id" >user.csv
+
+sqlite3 "$db" -csv "select id,enter,leave from public_visit order by id,enter" | {
+    # Read first line
+    IFS=, read old_id old_enter old_leave foo
+
+    # Process remaining lines
+    while IFS=, read id enter leave foo; do
+	if test $id != $old_id -o $enter -gt $old_leave; then
+	    echo $old_id,$old_enter,$old_leave
+	    
+	    # Store old values
+	    old_id=$id
+	    old_enter=$enter
+	    old_leave=$leave
+	else
+	    test $leave -gt $old_leave && old_leave=$leave
+	fi
+    done
+
+    # Print last line
+    echo $old_id,$old_enter,$old_leave
+} | sort -n -t , -k 2 -o visit.csv
+
+# Produce nick lookup table
+jq -Rs 'split("\n") | map(split(",") | if . == [] then empty else . end | { key: .[0], value: .[1]}) | from_entries' user.csv >user.json
+
+jq --slurpfile user user.json -R 'split(",") | {nick: $user[0][.[0]], enter: .[1] | tonumber, leave: .[2] | tonumber}' visit.csv
+
+rm -r "$tmpdir"
