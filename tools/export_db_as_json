@@ -2,6 +2,9 @@
 #
 # Dump SQL database, merge overlapping visits and produce
 # JSON. Terveisiä Turkuun tutuille.
+#
+# Schema: A list of objects having nickname, enter and leave times as
+# UNIX timestamps.
 
 db="$(readlink -f "${1:-`dirname "$0"`/../db/db.sqlite}")"
 
