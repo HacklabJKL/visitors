@@ -95,19 +95,24 @@ class Localization {
                 exec('sudo systemctl start paikalla.target');
             }
             break;
-        case 'sauna_heats':
-            if (!$value) break; // Sauna cooldown is not an interesting event
+        case 'sauna':
+            switch ($value) {
+            case 'heating':
+                $msg = "Sauna lämpenee. Tunnin päästä pääsee löylyihin! ";
+                $plain = "Seuraa lämpenemistä osoitteessa https://tilastot.jkl.hacklab.fi/sauna";
 
-            $msg = "Sauna lämpenee. Tunnin päästä pääsee löylyihin! ";
-            $plain = "Seuraa lämpenemistä osoitteessa https://tilastot.jkl.hacklab.fi/sauna";
-                        
-            $dom = new DOMDocument('1.0', 'UTF-8');
-            $dom->appendChild($dom->createTextNode($msg." 😅 "));
-            $link = $dom->createElement("a", "Seuraa lämpenemistä");
-            $link->setAttribute("href", "https://tilastot.jkl.hacklab.fi/sauna");
-            $dom->appendChild($link);
-            
-            $this->notice($msg.$plain, $dom);
+                $dom = new DOMDocument('1.0', 'UTF-8');
+                $dom->appendChild($dom->createTextNode($msg." 😅 "));
+                $link = $dom->createElement("a", "Seuraa lämpenemistä");
+                $link->setAttribute("href", "https://tilastot.jkl.hacklab.fi/sauna");
+                $dom->appendChild($link);
+
+                $this->notice($msg.$plain, $dom);
+                break;
+            case 'active':
+                $this->notice("Saunominen alkoi juuri!");
+                break;
+            }
             break;
         }
     }
