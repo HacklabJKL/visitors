@@ -12,6 +12,26 @@ function utf8($num)
     return '';
 }
 
+function hackbus_read($vars)
+{
+    $hackbus_options = parse_ini_file(__DIR__.'/../../../hackbus.conf', TRUE);
+    if ($hackbus_options === FALSE) {
+        print("Configuration file invalid\n");
+        exit(1);
+    }
+
+    $req = [
+        "method" => "r",
+        "params" => $vars,
+    ];
+
+    $bus = stream_socket_client($hackbus_options['hackbus']);
+    fwrite($bus, json_encode($req)."\n");
+    $out = json_decode(fgets($bus), TRUE);
+    fclose($bus);
+    return $out;
+}
+
 // Search with timestamp or current visitors
 $req = array_key_exists('at', $_GET) ?
     [
@@ -40,6 +60,18 @@ case 'text':
 case 'json':
     header("Content-Type: application/json; charset=utf-8");
     print(json_encode($visits)."\n");
+    break;
+case 'json-v2':
+    // Get door information
+    $lab_info = hackbus_read(["in_charge", "arming_state", "open"])['result'];
+    // Return in_charge only if the lab is in a state there are people
+    // inside.
+    if ($lab_info['arming_state'] !== 'Unarmed') unset($lab_info['in_charge']);
+    unset($lab_info['arming_state']);
+    // Nest the normal visitor info to the answer
+    $lab_info['present'] = $visits;
+    header("Content-Type: application/json; charset=utf-8");
+    print(json_encode($lab_info)."\n");
     break;
 default:
     http_response_code(400);
