@@ -66,8 +66,11 @@ case 'json-v2':
     $lab_info = hackbus_read(["in_charge", "arming_state", "open"])['result'];
     // Return in_charge only if the lab is in a state there are people
     // inside.
-    if ($lab_info['arming_state'] !== 'Unarmed') unset($lab_info['in_charge']);
+    $lab_info['empty'] = $lab_info['arming_state'] !== 'Unarmed';
     unset($lab_info['arming_state']);
+    if ($lab_info['empty'])  {
+        unset($lab_info['in_charge']);
+    }
     // Nest the normal visitor info to the answer
     $lab_info['present'] = $visits;
     header("Content-Type: application/json; charset=utf-8");
