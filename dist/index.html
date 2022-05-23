@@ -20,7 +20,7 @@
       <p class="loading">{{ user.loading }}</p>
 
       <p v-if="user.errorcode === 'OUT'">
-	Et ole WLAN-verkossamme. Liity ensin langattomaan verkkoon <tt>HacklabJKL</tt> ja <a href=".">yritä uudelleen.</p>
+	Et ole WLAN-verkossamme. Liity ensin langattomaan verkkoon <tt>HacklabJKL</tt> ja <a href=".">yritä uudelleen</a>.
       </p>
       <template v-if="user.errorcode !== 'OUT'">
         <div class="alert success" v-bind:class="{ showAlert: response.success }">{{ response.message }}</div>
