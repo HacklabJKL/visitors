@@ -1,7 +1,14 @@
 #!/bin/sh -eu
 
-echo -n "Renaming $2 to $3. Changed MACS: "
-sqlite3 $1 <<EOF
-update user_mac set id=(select id from user where nick='$3') where id=(select id from user where nick='$2');
+db="`dirname $0`/../db/db.sqlite"
+
+if test $# -ne 2; then
+    echo "Usage: $0 OLD_NICK NEW_NICK" >&2
+    exit 1
+fi
+
+echo -n "Renaming $1 to $2. Changed MACS: "
+sqlite3 "$db" <<EOF
+update user_mac set id=(select id from user where nick='$2') where id=(select id from user where nick='$1');
 select changes();
 EOF
