@@ -37,7 +37,7 @@ class Matrix {
         if ($dom !== NULL) {
             $payload += [
                 'format' => 'org.matrix.custom.html',
-                'formatted_body' => $dom->saveHTML(),
+                'formatted_body' => $dom->saveXML(),
             ];
         }
 
