@@ -1,0 +1,13 @@
+#!/bin/sh -eu
+
+db="`dirname $0`/../db/db.sqlite"
+
+if test $# -ne 0; then
+    echo "Usage: $0" >&2
+    exit 1
+fi
+
+sqlite3 "$db" <<EOF
+.mode column
+select u.id,u.nick,datetime(max(leave), "unixepoch") last_seen from user u left join public_visit v on u.nick=v.nick group by u.nick order by leave desc;
+EOF
