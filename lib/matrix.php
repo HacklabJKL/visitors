@@ -35,9 +35,17 @@ class Matrix {
         ];
 
         if ($dom !== NULL) {
+            // We clean the XML up for broken Matrix appservices such
+            // as mx-puppet-discord by removing things which confuse them
+            $xml = $dom->saveXML();
+            // Collapse successive whitespaces (including newlines) into one
+            $xml = preg_replace('/\s+/', ' ', $xml);
+            // Clean the start and end; Remove XML prolog and trailing whitespaces
+            $xml = preg_replace('/^<\?xml[^>]*>\s?|\s$/', '',  $xml);
+
             $payload += [
                 'format' => 'org.matrix.custom.html',
-                'formatted_body' => $dom->saveXML(),
+                'formatted_body' => $xml,
             ];
         }
 
