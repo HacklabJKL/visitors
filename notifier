@@ -4,8 +4,21 @@
 require_once(__DIR__.'/lib/common.php');
 require_once(__DIR__.'/lib/visitors.php');
 
-// Create new notifier, defaulting to author's home lab.
-$conffile = array_key_exists(1, $argv) ? $argv[1] : __DIR__.'/notifier.conf';
+// Getopt is super lousy compared to what you have in modern libraries
+// nowadays. This is best we have in PHP and sticking with it
+$opts = getopt("hc:", ["help", "conf:"], $rest);
+if ($argc !== $rest) {
+    print("Invalid number of arguments, see --help\n");
+    exit(1);
+}
+
+if (array_key_exists('h', $opts) || array_key_exists('help', $opts)) {
+    printf("Usage: %s: [--conf=CONFIG_FILE]\n", $argv[0]);
+    exit(0);
+}
+
+// Create new notifier, defaulting to configuration file option
+$conffile = @$opts['conf'] ?: @$opts['c'] ?: __DIR__.'/notifier.conf';
 $conf = parse_ini_file($conffile, TRUE);
 if ($conf === FALSE) {
     print("Configuration file invalid\n");
