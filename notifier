@@ -6,14 +6,14 @@ require_once(__DIR__.'/lib/visitors.php');
 
 // Getopt is super lousy compared to what you have in modern libraries
 // nowadays. This is best we have in PHP and sticking with it
-$opts = getopt("hc:", ["help", "conf:"], $rest);
+$opts = getopt("hc:s", ["help", "conf:", "ssh"], $rest);
 if ($argc !== $rest) {
     print("Invalid number of arguments, see --help\n");
     exit(1);
 }
 
 if (array_key_exists('h', $opts) || array_key_exists('help', $opts)) {
-    printf("Usage: %s: [--conf=CONFIG_FILE]\n", $argv[0]);
+    printf("Usage: %s: [--conf=CONFIG_FILE] [--ssh]\n", $argv[0]);
     exit(0);
 }
 
@@ -28,6 +28,23 @@ if ($conf === FALSE) {
 // Load localization (premises specific handlers)
 require_once(__DIR__.'/lib/localizations/'.$conf['localization'].'.php');
 $notifier = new Localization();
+
+// Remote triggering via ssh
+if (array_key_exists('s', $opts) || array_key_exists('ssh', $opts)) {
+    // Remove procedure is in the env
+    $rpc = getenv('SSH_ORIGINAL_COMMAND');
+    if ($rpc === false) {
+        print("SSH_ORIGINAL_COMMAND required\n");
+        exit(2);
+    }
+    $method = 'ssh_'.$rpc;
+    if (!method_exists($notifier, $method)) {
+        print("Unsupported method name in selected localization: ".$method."\n");
+        exit(2);
+    }
+    $notifier->$method();
+    exit(0);
+}
 
 $find_user_by_id = $db->prepare("SELECT * from user WHERE id=?");
 

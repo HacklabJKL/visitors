@@ -140,4 +140,22 @@ class Localization {
     public function radio_button($e) {
         return false;
     }
+
+    public function ssh_stream_start() {
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $plain = 'Hacklab-telkkarissa alkoi lähetys. Katso selaimella '.
+               'osoitteessa https://tv.jkl.hacklab.fi/ tai avaa '.
+               'videosoittimessasi https://tv.jkl.hacklab.fi/hls/stream.m3u8';
+        $dom->appendChild($dom->createTextNode('Hacklab-telkkarissa alkoi lähetys. '));
+        $link = $dom->createElement("a");
+        $link->appendChild($dom->createTextNode('Katso selaimella'));
+        $link->setAttribute('href', 'https://tv.jkl.hacklab.fi/');
+        $dom->appendChild($link);
+        $dom->appendChild($dom->createTextNode(' tai avaa videosoittimessasi '));
+        $code = $dom->createElement("code");
+        $code->appendChild($dom->createTextNode('https://tv.jkl.hacklab.fi/hls/stream.m3u8'));
+        $dom->appendChild($code);
+        $this->notice($plain, $dom);
+        print("\n");
+    }
 }
