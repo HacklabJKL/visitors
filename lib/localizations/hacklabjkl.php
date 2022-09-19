@@ -141,12 +141,17 @@ class Localization {
         return false;
     }
 
-    public function ssh_stream_start() {
+    public function ssh_3d_print_start($rpc) {
         $dom = new DOMDocument('1.0', 'UTF-8');
-        $plain = 'Hacklab-telkkarissa alkoi lähetys. Katso selaimella '.
+        $plain = 'Hacklab-telkkarissa alkoi 3D-tulostus "'.$rpc->name.
+               '". Katso selaimella '.
                'osoitteessa https://tv.jkl.hacklab.fi/ tai avaa '.
                'videosoittimessasi https://tv.jkl.hacklab.fi/hls/stream.m3u8';
-        $dom->appendChild($dom->createTextNode('Hacklab-telkkarissa alkoi lähetys. '));
+        $dom->appendChild($dom->createTextNode('Hacklab-telkkarissa alkoi 3D-tulostus '));
+        $name = $dom->createElement("em");
+        $name->appendChild($dom->createTextNode($rpc->name));
+        $dom->appendChild($name);
+        $dom->appendChild($dom->createTextNode('. '));
         $link = $dom->createElement("a");
         $link->appendChild($dom->createTextNode('Katso selaimella'));
         $link->setAttribute('href', 'https://tv.jkl.hacklab.fi/');

@@ -31,18 +31,23 @@ $notifier = new Localization();
 
 // Remote triggering via ssh
 if (array_key_exists('s', $opts) || array_key_exists('ssh', $opts)) {
-    // Remove procedure is in the env
-    $rpc = getenv('SSH_ORIGINAL_COMMAND');
-    if ($rpc === false) {
+    // Remove procedure is in the env as JSON
+    $rpc_json = getenv('SSH_ORIGINAL_COMMAND');
+    if ($rpc_json === false) {
         print("SSH_ORIGINAL_COMMAND required\n");
         exit(2);
     }
-    $method = 'ssh_'.$rpc;
+    $rpc = json_decode($rpc_json);
+    if ($rpc === null) {
+        printf("Invalid JSON in SSH_ORIGINAL_COMMAND\n");
+        exit(2);
+    }
+    $method = 'ssh_'.$rpc->method;
     if (!method_exists($notifier, $method)) {
         print("Unsupported method name in selected localization: ".$method."\n");
         exit(2);
     }
-    $notifier->$method();
+    $notifier->$method($rpc);
     exit(0);
 }
 
