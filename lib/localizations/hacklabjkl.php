@@ -144,7 +144,7 @@ class Localization {
     // Called when visitors change at the venue
     public function visitors_change($nicks) {
         global $conf;
-        $this->matrix->msg_raw([
+        $this->matrix->event([
             'version' => 1,
             'nicks' => $nicks,
         ], $conf['matrix']['room'], 'fi.hacklab.visitors');
