@@ -48,10 +48,10 @@ class Matrix {
             ];
         }
 
-        return $this->event($payload, $room);
+        return $this->event($payload, $room, 'm.room.message');
     }
 
-    function event($payload, $room, $event_type = 'm.room.message') {
+    function event($payload, $room, $event_type) {
         $url = $this->hs . '/_matrix/client/r0/rooms/' . urlencode($room) . '/send/' . $event_type . '/' . uniqid();
 
         curl_setopt_array($this->ch, [
