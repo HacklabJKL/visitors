@@ -117,6 +117,12 @@ while (true) {
         // Skip if not containing JSON payload
         if ($e->json === NULL) break;
 
+        // Matrix native visitor information
+        $notifier->matrix_native([
+            'msgtype' => 'fi.hacklab.visitors',
+            'nicks' => $e->json->nicks,
+        ]);
+        
         if ($e->json->ids === []) {
             // Lab is now empty
             $notifier->last_leave(find_leavers($e->json->occupied));

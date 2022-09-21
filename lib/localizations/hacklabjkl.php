@@ -25,6 +25,11 @@ class Localization {
         fflush($this->espeak);
     }
 
+    // FIXME should be in the superclass
+    function matrix_native($payload) {
+        $this->matrix->msg_raw($payload, $conf['matrix']['room']);
+    }
+
     function hacklab_is_empty_msg($a) {
         $msg = "Hacklabilta poistuttiin.";
         switch (count($a)) {
