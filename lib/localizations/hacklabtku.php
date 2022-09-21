@@ -17,11 +17,6 @@ class Localization {
         $this->matrix->notice($conf['matrix']['room'], $msg, $dom);
     }
 
-    // FIXME should be in the superclass
-    function matrix_native($payload) {
-        $this->matrix->msg_raw($payload, $conf['matrix']['room']);
-    }
-
     function hacklab_is_empty_msg($a) {
         $msg = "Hacklabilta poistuttiin.";
         switch (count($a)) {
@@ -111,6 +106,10 @@ class Localization {
     }
 
     public function hackbus($event, $value) {
+        // empty
+    }
+
+    public function visitors_change($nicks) {
         // empty
     }
 }

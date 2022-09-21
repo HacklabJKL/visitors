@@ -51,8 +51,8 @@ class Matrix {
         return $this->raw_msg($payload, $room);
     }
 
-    function raw_msg($payload, $room) {
-        $url = $this->hs . '/_matrix/client/r0/rooms/' . urlencode($room) . '/send/m.room.message/' . uniqid();
+    function msg_raw($payload, $room, $event_type = 'm.room.message') {
+        $url = $this->hs . '/_matrix/client/r0/rooms/' . urlencode($room) . '/send/' . $event_type . '/' . uniqid();
 
         curl_setopt_array($this->ch, [
             CURLOPT_URL => $url,
