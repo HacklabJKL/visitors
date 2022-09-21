@@ -18,6 +18,7 @@ class Matrix {
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
                 'Accept: application/json',
+                'Authorization: Bearer '.$this->token,
             ],
         ]);
     }
@@ -27,8 +28,6 @@ class Matrix {
     }
 
     function msg($msgtype, $room, $msg, $dom = NULL) {
-        $url = $this->hs . '/_matrix/client/r0/rooms/' . urlencode($room) . '/send/m.room.message/' . uniqid() . '?access_token=' . urlencode($this->token);
-
         $payload = [
             'body'    => $msg,
             'msgtype' => $msgtype,
@@ -48,6 +47,12 @@ class Matrix {
                 'formatted_body' => $xml,
             ];
         }
+
+        return $this->raw_msg($payload, $room);
+    }
+
+    function raw_msg($payload, $room) {
+        $url = $this->hs . '/_matrix/client/r0/rooms/' . urlencode($room) . '/send/m.room.message/' . uniqid();
 
         curl_setopt_array($this->ch, [
             CURLOPT_URL => $url,
