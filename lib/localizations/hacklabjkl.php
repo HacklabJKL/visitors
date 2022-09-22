@@ -123,22 +123,7 @@ class Localization {
     }
 
     public function evening_start($visits) {
-        if (count($visits) === 0) {
-            $this->speak('Tunnistaudu ennen kuin kerhoilta voi alkaa!');
-        } else {
-            $msg = "Kerhoilta alkoi, paikalla ";
-            $msg .= count($visits) > 1 ? 'ovat ' : 'on ';
-            foreach ($visits as $user) {
-            $msg .=
-                $user['nick'].' (saapui '.
-                date('H:i', $user['enter']).
-                '), ';
-            }
-            $msg = substr($msg, 0, -2); // Remove comma+space
-            $msg .= ". Tervetuloa!";
-            $this->notice($msg);
-            $this->speak('Kerhoilta aloitettu.');
-        }
+        // Not used anymore
     }
 
     // Radio controlled button (433MHz) not used any more
