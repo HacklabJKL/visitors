@@ -118,10 +118,7 @@ while (true) {
         if ($e->json === NULL) break;
 
         // Matrix native visitor information
-        $notifier->matrix_native([
-            'msgtype' => 'fi.hacklab.visitors',
-            'nicks' => $e->json->nicks,
-        ]);
+        $notifier->visitors_change($e->json->nicks);
         
         if ($e->json->ids === []) {
             // Lab is now empty

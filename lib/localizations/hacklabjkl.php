@@ -25,11 +25,6 @@ class Localization {
         fflush($this->espeak);
     }
 
-    // FIXME should be in the superclass
-    function matrix_native($payload) {
-        $this->matrix->msg_raw($payload, $conf['matrix']['room']);
-    }
-
     function hacklab_is_empty_msg($a) {
         $msg = "Hacklabilta poistuttiin.";
         switch (count($a)) {
@@ -129,6 +124,15 @@ class Localization {
     // Radio controlled button (433MHz) not used any more
     public function radio_button($e) {
         return false;
+    }
+
+    // Called when visitors change at the venue
+    public function visitors_change($nicks) {
+        global $conf;
+        $this->matrix->event([
+            'version' => 1,
+            'nicks' => $nicks,
+        ], $conf['matrix']['room'], 'fi.hacklab.visitors');
     }
 
     public function ssh_3d_print_start($rpc) {
