@@ -114,6 +114,13 @@ class Localization {
                 break;
             }
             break;
+        case 'venue':
+            // Sending venue changes to the Matrix channel as a
+            // special event type.
+            global $conf;
+            $value->version = 1;
+            $this->matrix->event($value, $conf['matrix']['room'], 'fi.hacklab.venue');
+            break;
         }
     }
 
