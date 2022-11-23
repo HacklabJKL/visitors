@@ -40,9 +40,11 @@
           <label for="nick">Nimimerkki</label>
         </div>
         <input class="input" id="nick" type="text" v-model="user.nick">
-        
+
+	<div class="value"><input id="stealth" type="checkbox" v-model="user.stealth"><label for="stealth">Näkymättömyystila</label></div>
+
         <div class="buttons">
-          <button class="button" type="button" v-on:click="setNick(user.nick)">Päivitä nimimerkki</button>
+          <button class="button" type="button" v-on:click="setNick(user.nick, user.stealth)">Tallenna</button>
           <button class="button remove" type="button" v-on:click="delNick()">Poista nimimerkki</button>
         </div>
         

@@ -65,10 +65,10 @@ var app = new Vue({
 			self.fetchData();
 		},
 
-		setNick: function (nick) {
+		setNick: function (nick, stealth) {
 			var xhr = new XMLHttpRequest()
 			var self = this
-			xhr.open('PUT', apiURL + '?nick=' + encodeURIComponent(nick === null ? '' : nick))
+			xhr.open('PUT', apiURL + '?nick=' + encodeURIComponent(nick === null ? '' : nick) + '&stealth=' + encodeURIComponent(stealth ? '1' : '0'))
 			xhr.onload = function () {
 				self.handleResponse(xhr.responseText, 'Nimimerkki päivitetty');
 			}
