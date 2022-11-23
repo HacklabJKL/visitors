@@ -9,7 +9,7 @@ require_once(__DIR__.'/common.php');
 $visitors_stmt = $db->prepare("
     SELECT nick, min(enter) as enter
     FROM public_visit
-    WHERE enter<=:now AND leave>:now-:lease
+    WHERE enter<=:now AND leave>:now-:lease AND stealth=0
     GROUP BY id
     ORDER BY nick
 ");
