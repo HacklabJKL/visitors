@@ -178,7 +178,7 @@ while (true) {
         array_push($new_state['ids'], $row['id']);
         // Stealths users are not shown with name in Matrix etc. but
         // are counted in in total count.
-        if ($row['stealth']) {
+        if (!$row['stealth']) {
             array_push($new_state['nicks'], $row['nick']);
         }
     }
