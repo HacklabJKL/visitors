@@ -58,7 +58,7 @@ $update_visit = $db->prepare("
 ");
 $update_visit->bindValue('lease',$merge_window_sec);
 $find_users = $db->prepare("
-	SELECT id, nick, max(leave) AS leave
+	SELECT id, nick, max(leave) AS leave, stealth
 	FROM public_visit
 	WHERE leave > ?
 	GROUP BY id
@@ -176,7 +176,11 @@ while (true) {
         // Grab them by the first leaver time
         $min_leave = min($min_leave, $row['leave']);
         array_push($new_state['ids'], $row['id']);
-        array_push($new_state['nicks'], $row['nick']);
+        // Stealths users are not shown with name in Matrix etc. but
+        // are counted in in total count.
+        if ($row['stealth']) {
+            array_push($new_state['nicks'], $row['nick']);
+        }
     }
 
     if ($state->get()['ids'] !== $new_state['ids']) {
