@@ -137,7 +137,7 @@ case 'PUT':
             break 2;
         }
 
-        db_execute($update_flappiness, [
+        db_execute($update_stealth, [
             'ip'  => $ip,
             'val' => $stealth
         ]);
