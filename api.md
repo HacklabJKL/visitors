@@ -28,24 +28,24 @@ output. You may leave it out if you can natively parse JSON :-)
 
 Get list of visitors:
 
-	curl http://hacklab.ihme.org/visitors/api/v1/visitors?format=json | jq
+	curl https://visitors.jkl.hacklab.fi/api/v1/visitors?format=json | jq
 
 Get list of visitors last Tuesday at 8 PM:
 
-	curl "http://hacklab.ihme.org/visitors/api/v1/visitors?format=json&at=`date +%s -d 'last tuesday 20'`" | jq
+	curl "https://visitors.jkl.hacklab.fi/api/v1/visitors?format=json&at=`date +%s -d 'last tuesday 20'`" | jq
 
 Get list of registered nicknames:
 
-	curl http://hacklab.ihme.org/visitors/api/v1/nicks | jq
+	curl https://visitors.jkl.hacklab.fi/api/v1/nicks | jq
 	
 Get info associated to your device:
 
-	curl http://hacklab.ihme.org/visitors/api/v1/nick | jq
+	curl https://visitors.jkl.hacklab.fi/api/v1/nick | jq
 
 Set a nickname for your device (you may use the same nickname for all of your devices):
 
-	curl -X PUT http://hacklab.ihme.org/visitors/api/v1/nick?nick=Hillosipuli
+	curl -X PUT https://visitors.jkl.hacklab.fi/api/v1/nick?nick=Hillosipuli
 
 Stop tracking:
 
-	curl -X DELETE http://hacklab.ihme.org/visitors/api/v1/nick
+	curl -X DELETE https://visitors.jkl.hacklab.fi/api/v1/nick
