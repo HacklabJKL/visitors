@@ -87,6 +87,7 @@ case 'DELETE':
     break;
 case 'PUT':
     $db->exec('BEGIN');
+    $changes = FALSE;
 
     if (array_key_exists('nick', $_GET) && $_GET['nick'] !== '') {
         // Set nick if it's in URL
@@ -109,6 +110,7 @@ case 'PUT':
             $o = $outerror;
             break;
         }
+        $changes=TRUE;
     }
     if (array_key_exists('flappiness', $_GET) && $_GET['flappiness'] !== '') {
         // Try to set the parameter
@@ -122,6 +124,7 @@ case 'PUT':
             $o = $nick_unset;
             break;
         }
+        $changes=TRUE;
     }
     if (array_key_exists('stealth', $_GET) && $_GET['stealth'] !== '') {
         // Try to set the parameter
@@ -147,10 +150,14 @@ case 'PUT':
             $o = $nick_unset;
             break;
         }
+        $changes=TRUE;
     }
 
     // Everything is fine!
-    $o = ["success" => TRUE];
+    $o = $changes ? ["success" => TRUE] : [
+        "error" => "No operations requested",
+        "errorcode" => "NO-OP"
+    ];
     $db->exec('END');
     break;
 default:
