@@ -183,11 +183,10 @@ while (true) {
         }
     }
 
-    $is_same =
-             $state->get()['ids'] === $new_state['ids'] &&
-             $state->get()['nicks'] === $new_state['nicks'];
+    $ids_changed = $state->get()['ids'] !== $new_state['ids'];
+    $nicks_changed = $state->get()['nicks'] !== $new_state['nicks'];
 
-    if (!$is_same) {
+    if ($ids_changed || $nicks_changed) {
         // Users changed. If it was previously empty, update time.
         if ($state->get()['ids'] === []) {
             $new_state['occupied'] = $min_leave;
