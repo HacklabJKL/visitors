@@ -23,7 +23,7 @@ work with any system running *systemd*.
 Install requirements (as root):
 
 ```sh
-apt install php-cli php-sqlite3 php-xml php-curl php-fpm nginx
+apt install php-cli php-sqlite3 php-xml php-curl php-fpm php-intl nginx
 ```
 
 Initialize database:

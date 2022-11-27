@@ -26,6 +26,7 @@ class Localization {
     }
 
     function hacklab_is_empty_msg($a) {
+        $now = time();
         $msg = "Hacklabilta poistuttiin.";
         switch (count($a)) {
         case 0:
@@ -45,6 +46,9 @@ class Localization {
         $msg .= " ";
 
         foreach ($a as $user => $visits) {
+            $overnight = ($now - $visit['enter']) > 86400;
+            $format = datefmt_create("fi_FI", pattern: $overnight ? 'E H:mm' : 'H:mm');
+
             $row = $dom->createElement("li");
             $row->appendChild($dom->createElement("strong",$user));
 
@@ -52,9 +56,9 @@ class Localization {
             $range = "";
             foreach($visits as $visit) {
                 $range .=
-                    date('H:i', $visit['enter']).
+                    datefmt_format($format, $visit['enter']).
                     '–'.
-                    date('H:i', $visit['leave']).
+                    datefmt_format($format, $visit['leave']).
                     ', ';
             }
             // Add closing brace before comma+space the hard way
