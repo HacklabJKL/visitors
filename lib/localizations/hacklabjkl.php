@@ -27,6 +27,11 @@ class Localization {
 
     function hacklab_is_empty_msg($a) {
         $now = time();
+        $formats = [
+            datefmt_create("fi_FI", pattern: 'H:mm'),
+            datefmt_create("fi_FI", pattern: 'E H:mm')
+        ];
+
         $msg = "Hacklabilta poistuttiin.";
         switch (count($a)) {
         case 0:
@@ -46,19 +51,18 @@ class Localization {
         $msg .= " ";
 
         foreach ($a as $user => $visits) {
-            $overnight = ($now - $visit['enter']) > 86400;
-            $format = datefmt_create("fi_FI", pattern: $overnight ? 'E H:mm' : 'H:mm');
-
             $row = $dom->createElement("li");
             $row->appendChild($dom->createElement("strong",$user));
 
             $msg .= "$user (";
             $range = "";
             foreach($visits as $visit) {
+                // For stays starting over 24 h ago we use a different format
+                $overnight = ($now - $visit['enter']) > 86400;
                 $range .=
-                    datefmt_format($format, $visit['enter']).
+                    datefmt_format($formats[$overnight], $visit['enter']).
                     '–'.
-                    datefmt_format($format, $visit['leave']).
+                    datefmt_format($formats[$overnight], $visit['leave']).
                     ', ';
             }
             // Add closing brace before comma+space the hard way
